@@ -17,19 +17,21 @@ int main(void)
     gets(command);
     if (!strcmp(command, "exit"))
     {
-      return 1;
+      return 0;
     }
     
-    printf("my_shell_$-> ");
     Char_ptr args[] = {command, NULL};
     int pid = fork();
     if (pid == 0)
     {
       execvp(command, args);
+      printf("commad not found\n");
+      return -1;
     }
     else
     {
       wait(&pid);
     }
+    printf("my_shell_$-> ");
   }
 }
