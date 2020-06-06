@@ -5,12 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "config.h"
+
 typedef char *Char_ptr;
 
 Char_ptr *split(char *text, char *symbol)
 {
   int counter = 0;
-  Char_ptr* text_array_ptr = calloc(counter + 1, sizeof(char *));
+  Char_ptr *text_array_ptr = calloc(counter + 1, sizeof(char *));
   text_array_ptr[counter] = &text[0];
 
   for (int i = 0; text[i] != '\0'; i++)
@@ -32,33 +34,28 @@ Char_ptr *split(char *text, char *symbol)
 
 int main(void)
 {
+  Char_ptr shell_ditels = strcmp(prompt, "") == 0 ? "my_shell" : prompt;
+  
   char command[300];
-
-  printf("my_shell_$-> ");
+  printf("%s_$-> ", shell_ditels);
   while (1)
   {
     gets(command);
-
     if (!strcmp(command, "exit"))
     {
       return 0;
     }
-    
-    // Char_ptr args[] = {command, NULL};
-    Char_ptr* args = split(command, " ");
+    Char_ptr *args = split(command, " ");
     int pid = fork();
     if (pid == 0)
     {
-      // printf("child%d\n", pid);
       execvp(args[0], args);
       printf("commad not found\n");
-      return 1;
     }
     else
     {
       wait(&pid);
-      // printf("parent%d\n", pid);
     }
-    printf("my_shell_$-> ");
+  printf("%s_$-> ", shell_ditels);
   }
 }
