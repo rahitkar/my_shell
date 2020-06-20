@@ -7,47 +7,48 @@
 #include <signal.h>
 
 #include "config.h"
+#include "parse.h"
+#include "print_prompt.h"
 
 typedef char *Char_ptr;
 
-Char_ptr *split(char *text, char *symbol)
-{
-  int counter = 0;
-  Char_ptr *text_array_ptr = calloc(counter + 1, sizeof(char *));
-  text_array_ptr[counter] = &text[0];
+int is_redirected(Char_ptr command) {
+  
+  int i = 0;
 
-  for (int i = 0; text[i] != '\0'; i++)
+  while (command[i] != '\0')
   {
-    if (text[i] == symbol[0])
-    {
-      text[i] = '\0';
-      counter++;
-      text_array_ptr = realloc(text_array_ptr, (counter + 1) * sizeof(char *));
-      text_array_ptr[counter] = &text[++i];
+    if(command[i] == '>') {
+      return 1;
     }
+    i++;
   }
-  text_array_ptr = realloc(text_array_ptr, (counter + 1) * sizeof(char *));
-  counter++;
-  text_array_ptr[counter] = NULL;
-
-  return text_array_ptr;
+  return 0;
 }
 
 int main(void)
 {
   Char_ptr shell_ditels = strcmp(prompt, "") == 0 ? "my_shell" : prompt;
-
   char command[300];
   char current_directory[100];
+  int flag = 0;
   while (1)
   {
     signal(SIGINT, SIG_IGN);
-    printf("%s_$%s-> ", shell_ditels, getcwd(current_directory, 100));
+    print_prompt(shell_ditels, current_directory, flag);
     gets(command);
+    if (is_redirected(command))
+    {
+      printf("redirected");
+      continue;
+    }
+
     if (!strcmp(command, "exit"))
       return 0;
 
     Char_ptr *args = split(command, " ");
+
+    
     if (!strcmp(args[0], "..")) //builtIn commands
     {
       chdir(args[0]);
@@ -74,6 +75,6 @@ int main(void)
     {
       wait(&pid);
     }
-    printf("\n");
+    flag = WEXITSTATUS(pid);
   }
 }
