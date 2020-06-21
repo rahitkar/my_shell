@@ -1,1 +1,1 @@
-char prompt[] = "Rahit";
+char prompt[] ="rahit";
