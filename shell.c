@@ -15,16 +15,17 @@ typedef char *Char_ptr;
 
 int main(void)
 {
-  Char_ptr shell_ditels = strcmp(prompt, "") == 0 ? "my_shell" : prompt; // check for configuration
+  Char_ptr prompt_ditels = strcmp(prompt, "") == 0 ? "my_shell" : prompt; // check for configuration
+
   char command[300];
   char current_directory[100];
   int process_flag = 0;
   int redirected_flag;
   while (1) // infinity loop to continue the shell
   {
-    signal(SIGINT, SIG_IGN);                                     // quit ignored
-    print_prompt(shell_ditels, current_directory, process_flag); // print prompt as par the last status code
-    gets(command);                                               // get user command
+    signal(SIGINT, SIG_IGN); // quit ignored
+    print_prompt(prompt_ditels, current_directory, process_flag, prmt_colour_flag, pwd_colour_flag); // print prompt as par the last status code
+    gets(command); // get user command
 
     if (!strcmp(command, "exit")) // exit gracefully
       return 0;
@@ -46,9 +47,9 @@ int main(void)
 
     if (!strcmp(args[0], "cd"))
     {
-      getcwd(current_directory, 100);             // get current working directory
+      getcwd(current_directory, 100); // get current working directory
       char *dir = strcat(current_directory, "/"); //concat to make path
-      chdir(strcat(dir, args[1]));                // change directory
+      chdir(strcat(dir, args[1])); // change directory
       continue;
     }
     redirected_flag = is_redirected(args); //redirection check
@@ -66,10 +67,10 @@ int main(void)
     int pid = fork(); // creating two processes
     if (pid == 0)     //child
     {
-      signal(SIGINT, NULL);         //quit signal redstored
-      execvp(args[0], args);        // changing the process img with the given command
+      signal(SIGINT, NULL); //quit signal redstored
+      execvp(args[0], args); // changing the process img with the given command
       printf("commad not found\n"); // if exec fails then it comes here else not
-      exit(-1);                     //come out with fail exit code
+      exit(-1); //come out with fail exit code
     }
     else //parent
     {

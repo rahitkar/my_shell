@@ -3,6 +3,8 @@
 
 #include "print_prompt.h"
 
+typedef void (*Paint)();
+
 void red()
 {
   printf("\033[1;31m");
@@ -28,20 +30,20 @@ void reset()
   printf("\033[0m");
 }
 
-void print_prompt(char *shell_ditels, char *current_directory, int flag)
+void print_prompt(char *shell_ditels, char *current_directory, int flag, int prmt_cf, int pwd_cf)
 {
-  yellow();
+  Paint colours[] = {red, yellow, blue, green, reset};
+  // yellow();
+  colours[prmt_cf]();
   printf("%s", shell_ditels);
-  blue();
+  // blue();
+  colours[pwd_cf]();
   printf("%s", getcwd(current_directory, 100));
+  green();
   if (flag)
   {
     red();
-    printf("-> ");
-    reset();
-    return;
   }
-  green();
   printf("-> ");
   reset();
 }
