@@ -1,4 +1,5 @@
 const fs = require('fs');
+const os = require('os');
 
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -20,7 +21,7 @@ const main = function() {
           'For path colour Enter a number\nred = 0 yellow = 1 blue = 2 green = 3 white = 4 : ',
           (colour_flag) => {
             shell_info += `int pwd_colour_flag = ${colour_flag};\n`;
-            fs.writeFileSync('./config.h', shell_info, 'UTF8');
+            fs.writeFileSync(`${os.homedir()}/shell/config.h`, shell_info, 'UTF8');
             rl.close();
           }
         );
@@ -28,5 +29,5 @@ const main = function() {
     );
   });
 };
-// 'For prompt colour Enter a number\nred = 0\nyellow = 1\nblue = 2\ngreen = 3\nwhite = 4 : '
+
 main();
