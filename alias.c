@@ -30,19 +30,19 @@ int get_args_length(Char_ptr* args)
   return indx;
 }
 
-void handle_alias(Char_ptr* args, List_ptr alias_list)
+int handle_alias(Char_ptr* args, List_ptr alias_list)
 {
   int length = get_args_length(args);
   if (length == 1)
   {
     display(alias_list);
-    return;
+    return 0;
   }
 
   if (length <= 3)
   {
-    printf("not enough arguments\n");
-    return;
+    fprintf( stderr, "rsh: not enough arguments\n");
+    return -1;
   }
   
   if (!strcmp("=", args[2]))
@@ -58,6 +58,7 @@ void handle_alias(Char_ptr* args, List_ptr alias_list)
     aliashed_command[strlen(aliashed_command) -1] = '\0';
     add_to_end(alias_list, aliashed_command, args[1]);
   }
+  return 0;
 }
 
 // [a, dir, NULL] [ls, dir, NULL]
@@ -95,7 +96,7 @@ Char_ptr make_command(Char_ptr command, Char_ptr* args)
   return new_command;
 }
 
-void perform_alias(Char_ptr* args, List_ptr alias_list)
+int perform_alias(Char_ptr* args, List_ptr alias_list)
 {
   Char_ptr alished_command = get_alished_command(args[0], alias_list);
   Char_ptr joined_command = make_command(alished_command, args);
@@ -104,25 +105,28 @@ void perform_alias(Char_ptr* args, List_ptr alias_list)
   if (pid == 0)
   {
   execvp(actual_command[0], actual_command);
-  exit(-1);
+  fprintf( stderr, "rsh: aliased command: %s not found\n", actual_command[0]);
+  return 1;
   } else
   {
     wait(&pid);
   }
+  return 0;
 }
 
-void handle_unalias(Char_ptr* args, List_ptr alias_list)
+int handle_unalias(Char_ptr* args, List_ptr alias_list)
 {
   if (get_args_length(args) < 2)
   {
-    printf("unalias: not enough arguments\n");
-    return;
+    fprintf(stderr, "rsh: unalias: not enough arguments\n");
+    return -1;
   }
   
   int position = search(alias_list, args[1]);
   if (remove_at(alias_list, position))
   {
-    return;
+    return 0;
   }
-  printf("unalias: no such element: %s\n", args[1]);
+  fprintf(stderr, "rsh: unalias: no such element: %s\n", args[1]);
+  return -1;
 }

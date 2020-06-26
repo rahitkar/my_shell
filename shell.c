@@ -34,7 +34,7 @@ int main(void)
 
     Char_ptr *args = split(command, " ");
 
-    if (handle_builtin(args, command, alias_list))
+    if (handle_builtin(args, command, alias_list, &process_flag))
     {
       continue;
     }
@@ -44,7 +44,7 @@ int main(void)
     {
       signal(SIGINT, NULL); //quit signal redstored
       execvp(args[0], args); // changing the process img with the given command
-      printf("commad not found\n"); // if exec fails then it comes here else not
+      printf("rsh:commad not found\n"); // if exec fails then it comes here else not
       exit(-1); //come out with fail exit code
     }
     else //parent

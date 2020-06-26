@@ -61,6 +61,7 @@ void perform_pipe(Char_ptr **commands, int count)
         dup2(pipe_fd[1], 1);
         perform_pipe(commands, count -1);
         execvp(commands[count -1][0], commands[count -1]);
+        fprintf(stderr, "rsh: %s command not found\n", commands[count -1][0]);
         exit(-1);
     }
     else
@@ -69,6 +70,7 @@ void perform_pipe(Char_ptr **commands, int count)
         close(pipe_fd[1]);
         dup2(pipe_fd[0], 0);
         execvp(commands[count][0], commands[count]);
+        fprintf(stderr, "rsh: %s command not found\n", commands[count][0]);
         exit(-1);
     }
 }

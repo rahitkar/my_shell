@@ -1,6 +1,7 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#include <unistd.h> //for dup, exac
+#include <unistd.h> //fork dup, exac
 #include <sys/wait.h> //wait
 #include <string.h>
 
@@ -78,6 +79,8 @@ void handle_redirection(Char_ptr *args, Char_ptr type)
   if (pid == 0)
   {
     execvp(separeted_args->parsed_args[0], separeted_args->parsed_args);
+    fprintf(stderr, "rsh: %s command not found\n", separeted_args->parsed_args[0]);
+    exit(-1);
   }
   else
   {

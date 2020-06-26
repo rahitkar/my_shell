@@ -5,6 +5,6 @@
 
 typedef char* Char_ptr;
  
-int handle_builtin(Char_ptr* args, Char_ptr commad, List_ptr alias_list);
+int handle_builtin(Char_ptr* args, Char_ptr commad, List_ptr alias_list, int* process_flag);
 
 #endif
