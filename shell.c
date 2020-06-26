@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>   //exit
 #include <unistd.h>   //fork exac
 #include <sys/wait.h> //wait
 #include <string.h>   //string
@@ -8,19 +8,21 @@
 #include "config.h"
 #include "parse.h"
 #include "print_prompt.h"
-#include "redirect.h"
-#include "configure.h"
+#include "builtin.h"
+#include "linked_list.h"
 
 typedef char *Char_ptr;
 
 int main(void)
 {
+  List_ptr alias_list = create_list();
+  
   Char_ptr prompt_ditels = strcmp(prompt, "") == 0 ? "my_shell" : prompt; // check for configuration
 
   char command[300];
   char current_directory[100];
-  int process_flag = 0;
   int redirected_flag;
+  int process_flag = 0;
   while (1) // infinity loop to continue the shell
   {
     signal(SIGINT, SIG_IGN); // quit ignored
@@ -32,38 +34,11 @@ int main(void)
 
     Char_ptr *args = split(command, " ");
 
-    if (!strcmp(args[0], ".config")) //builtIn commands
+    if (handle_builtin(args, command, alias_list))
     {
-      configure();
-      execlp("runshell.sh", "runshell.sh", "shell", NULL);
       continue;
     }
-
-    if (!strcmp(args[0], ".."))
-    {
-      chdir(args[0]);
-      continue;
-    }
-
-    if (!strcmp(args[0], "cd"))
-    {
-      getcwd(current_directory, 100); // get current working directory
-      char *dir = strcat(current_directory, "/"); //concat to make path
-      chdir(strcat(dir, args[1])); // change directory
-      continue;
-    }
-    redirected_flag = is_redirected(args); //redirection check
-    if (redirected_flag)
-    {
-      Char_ptr type = ">>";
-      if (redirected_flag == 1)
-      {
-        type = ">";
-      }
-      handle_redirection(args, type);
-      continue;
-    }
-
+    
     int pid = fork(); // creating two processes
     if (pid == 0)     //child
     {

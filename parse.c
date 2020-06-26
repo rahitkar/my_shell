@@ -5,8 +5,8 @@
 
 Char_ptr copy_text(Char_ptr text) {
   int length = strlen(text);
-  Char_ptr copy = calloc(length, sizeof(char));
-  for (size_t i = 0; i < length; i++)
+  Char_ptr copy = calloc(length+1, sizeof(char));
+  for (size_t i = 0; i < length+1; i++)
   {
     copy[i] = text[i];
   }
@@ -30,8 +30,8 @@ Char_ptr *split(Char_ptr text, Char_ptr symbol)
       text_array_ptr[counter] = &copy[++i];
     }
   }
-  text_array_ptr = realloc(text_array_ptr, (counter + 1) * sizeof(Char_ptr ));
   counter++;
+  text_array_ptr = realloc(text_array_ptr, (counter + 1) * sizeof(Char_ptr ));
   text_array_ptr[counter] = NULL;
   return text_array_ptr;
 }

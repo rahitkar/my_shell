@@ -13,15 +13,19 @@ const main = function() {
     shell_info = `char prompt[] ="${name}";\n`;
 
     rl.question(
-      'For prompt colour Enter a number\nred = 0 yellow = 1 blue = 2 green = 3 white = 4 : ',
+      '\nFor prompt colour Enter a number\nred(0) yellow(1) blue(2) green(3) white(4) : ',
       (colour_flag) => {
         shell_info += `int prmt_colour_flag = ${colour_flag};\n`;
 
         rl.question(
-          'For path colour Enter a number\nred = 0 yellow = 1 blue = 2 green = 3 white = 4 : ',
+          '\nFor pwd colour Enter a number\nred(0) yellow(1) blue(2) green(3) white(4) : ',
           (colour_flag) => {
             shell_info += `int pwd_colour_flag = ${colour_flag};\n`;
-            fs.writeFileSync(`${os.homedir()}/shell/config.h`, shell_info, 'UTF8');
+            fs.writeFileSync(
+              `${os.homedir()}/shell/config.h`,
+              shell_info,
+              'UTF8'
+            );
             rl.close();
           }
         );

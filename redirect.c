@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h> //for dup, exac
+#include <sys/wait.h> //wait
 #include <string.h>
 
 #include "redirect.h"
@@ -20,7 +21,7 @@ int is_redirected(Char_ptr *args)
   {
     for (size_t j = 0; args[i][j] != '\0'; j++)
     {
-      if (args[i][j] == '>' && args[i][j + 1 ] == '>')
+      if (args[i][j] == '>' && args[i][j + 1 ] == '>') // cheking >>
       {
         return 2;
       }
