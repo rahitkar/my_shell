@@ -46,7 +46,7 @@ void display(List_ptr list)
     printf("%s=%s\n",p_walk->alias, p_walk->command);
     p_walk = p_walk->next;
   }
-} 
+}
 
 Status remove_from_start(List_ptr list)
 {
