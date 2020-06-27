@@ -20,19 +20,8 @@ int is_command_alias(Char_ptr* args, List_ptr alias_list)
    ? 1 : 0;
 }
 
-int get_args_length(Char_ptr* args)
-{
-  size_t indx = 0;
-  while (args[indx] != NULL)
-  {
-    indx++;
-  }
-  return indx;
-}
-
 int handle_alias(Char_ptr* args, List_ptr alias_list)
 {
-  signal(SIGINT, NULL); // restore quiting
   int length = get_args_length(args);
   if (length == 1)
   {
@@ -107,7 +96,7 @@ int perform_alias(Char_ptr* args, List_ptr alias_list)
   {
   execvp(actual_command[0], actual_command);
   fprintf( stderr, "rsh: aliased command: %s not found\n", actual_command[0]);
-  return 1;
+  return -1;
   } else
   {
     wait(&pid);

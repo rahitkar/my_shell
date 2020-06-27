@@ -55,7 +55,7 @@ Args_info_ptr parse_args(Char_ptr *args, Char_ptr type)
   return args_info;
 }
 
-void handle_redirection(Char_ptr *args, Char_ptr type)
+void handle_redirection(Char_ptr *args, Char_ptr type, int* process_flag)
 {
   Args_info_ptr separeted_args = parse_args(args, type);
   int file_index = separeted_args->index_of_file;
@@ -79,7 +79,9 @@ void handle_redirection(Char_ptr *args, Char_ptr type)
   if (pid == 0)
   {
     execvp(separeted_args->parsed_args[0], separeted_args->parsed_args);
+    *process_flag = -1;
     fprintf(stderr, "rsh: %s command not found\n", separeted_args->parsed_args[0]);
+    execlp("rm",  "rm", separeted_args->parsed_args[file_index], NULL);
     exit(-1);
   }
   else

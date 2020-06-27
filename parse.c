@@ -3,6 +3,16 @@
 
 #include "parse.h"
 
+int get_args_length(Char_ptr* args)
+{
+  size_t indx = 0;
+  while (args[indx] != NULL)
+  {
+    indx++;
+  }
+  return indx;
+}
+
 Char_ptr copy_text(Char_ptr text) {
   int length = strlen(text);
   Char_ptr copy = calloc(length+1, sizeof(char));
@@ -64,6 +74,5 @@ char *join(char *text1, char *text2)
       j++;
     }
   }
-
   return joined_string;
 }

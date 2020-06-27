@@ -6,7 +6,7 @@
 
 #include "exec_call.h"
 
-int execute_exec_commands(Char_ptr *args)
+int execute_exec_commands(Char_ptr *args, int* process_flag)
 {
   int pid = fork(); // creating two processes
   if (pid == 0)     //child
@@ -20,5 +20,6 @@ int execute_exec_commands(Char_ptr *args)
   {
     wait(&pid); // wait for the child to finish the process
   }
+  *process_flag = WEXITSTATUS(pid);
   return 0;
 }

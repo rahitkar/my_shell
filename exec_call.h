@@ -3,6 +3,6 @@
 
 typedef char* Char_ptr;
 
-int execute_exec_commands(Char_ptr *args);
+int execute_exec_commands(Char_ptr *args, int* process_flag);
 
 #endif

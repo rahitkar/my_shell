@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>   //fork exac getenv
+#include <stdlib.h>    //getenv
+#include <unistd.h>   //fork exac 
 #include <sys/wait.h> //wait
 #include <string.h>
 

@@ -9,12 +9,14 @@
 #include "pipe.h"
 #include "alias.h"
 #include "script.h"
+#include "set_variable.h"
+#include "parse.h"
 
-int handle_builtin(Char_ptr *args, Char_ptr command, List_ptr alias_list, int* process_flag)
+int handle_builtin(Char_ptr *args, Char_ptr command, List_ptr alias_list, List_ptr variable_list, int* process_flag)
 {
   char current_directory[100];
   int redirected_flag;
-
+  
   if (is_command_alias(args, alias_list))
   {
     *process_flag = perform_alias(args, alias_list);
@@ -33,12 +35,17 @@ int handle_builtin(Char_ptr *args, Char_ptr command, List_ptr alias_list, int* p
     return 1;
   }
 
-  // if (is_script(command))
-  // {
-  //   printf("script\n");
-  //   // handle_script(command);
-  //   return 1;
-  // } will implement later
+  if (is_perform_variable(args))
+  {
+    perform_variable(args, variable_list);
+    return 0;
+  }
+
+  if (get_args_length(args) > 1 && !strcmp(args[1], "="))
+  {
+    *process_flag = handle_set_variable(args, variable_list);
+    return 1;
+  }
 
   if (!strcmp(args[0], ".config")) //builtIn commands
   {
@@ -69,7 +76,7 @@ int handle_builtin(Char_ptr *args, Char_ptr command, List_ptr alias_list, int* p
     {
       type = ">";
     }
-    handle_redirection(args, type);
+    handle_redirection(args, type, process_flag);
     return 1;
   }
 
