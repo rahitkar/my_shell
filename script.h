@@ -1,7 +1,9 @@
 #ifndef __SCRIPT_H_
 #define __SCRIPT_H_
 
-typedef char* Char_ptr;
+#include "parse.h"
+#include "linked_list.h"
 
+void run_script(Char_ptr commands, List_ptr alias_list, int* process_flag);
 
 #endif

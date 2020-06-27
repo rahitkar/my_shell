@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
+#include <fcntl.h> //open
 #include <unistd.h> //fork dup, exac
 #include <sys/wait.h> //wait
 #include <string.h>

@@ -77,6 +77,7 @@ void perform_pipe(Char_ptr **commands, int count)
 
 void handle_pipes(Char_ptr command)
 {
+    signal(SIGINT, NULL); // quit ignored
     int pid;
 
     Commands_info *commands = get_piped_commands(command);

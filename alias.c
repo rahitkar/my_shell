@@ -32,6 +32,7 @@ int get_args_length(Char_ptr* args)
 
 int handle_alias(Char_ptr* args, List_ptr alias_list)
 {
+  signal(SIGINT, NULL); // restore quiting
   int length = get_args_length(args);
   if (length == 1)
   {
