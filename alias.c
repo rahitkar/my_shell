@@ -86,22 +86,12 @@ Char_ptr make_command(Char_ptr command, Char_ptr* args)
   return new_command;
 }
 
-int perform_alias(Char_ptr* args, List_ptr alias_list)
+Char_ptr* perform_alias(Char_ptr* args, List_ptr alias_list)
 {
   Char_ptr alished_command = get_alished_command(args[0], alias_list);
   Char_ptr joined_command = make_command(alished_command, args);
   Char_ptr* actual_command = split(joined_command, " ");
-  int pid = fork();
-  if (pid == 0)
-  {
-  execvp(actual_command[0], actual_command);
-  fprintf( stderr, "rsh: aliased command: %s not found\n", actual_command[0]);
-  return -1;
-  } else
-  {
-    wait(&pid);
-  }
-  return 0;
+  return actual_command;
 }
 
 int handle_unalias(Char_ptr* args, List_ptr alias_list)

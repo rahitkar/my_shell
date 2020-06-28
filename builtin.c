@@ -16,12 +16,6 @@ int handle_builtin(Char_ptr *args, Char_ptr command, List_ptr alias_list, List_p
 {
   char current_directory[100];
   int redirected_flag;
-  
-  if (is_command_alias(args, alias_list))
-  {
-    *process_flag = perform_alias(args, alias_list);
-    return 1;
-  }
 
   if (!strcmp("alias", args[0]))
   {
@@ -33,12 +27,6 @@ int handle_builtin(Char_ptr *args, Char_ptr command, List_ptr alias_list, List_p
   {
     *process_flag = handle_unalias(args, alias_list);
     return 1;
-  }
-
-  if (is_perform_variable(args))
-  {
-    perform_variable(args, variable_list);
-    return 0;
   }
 
   if (get_args_length(args) > 1 && !strcmp(args[1], "="))

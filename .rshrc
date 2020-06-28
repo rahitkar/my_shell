@@ -1,0 +1,4 @@
+alias ls = ls -G
+alias l = ls -lah
+alias .. = cd ..
+alias md = mkdir -p

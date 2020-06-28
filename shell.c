@@ -13,6 +13,8 @@
 #include "linked_list.h"
 #include "exec_call.h"
 #include "script.h"
+#include "alias.h"
+#include "set_variable.h"
 
 typedef char *Char_ptr;
 
@@ -22,7 +24,7 @@ int main(void)
   List_ptr variable_list = create_list();
 
   int process_flag = 0;
-  char rsh_path[30] = "/Users/", rsh_name[] = "/.rshrc";
+  char rsh_path[30] = "/Users/", rsh_name[] = "/shell/.rshrc";
   char *user = getenv("USER");
   strcat(rsh_path, user);
   strcat(rsh_path, rsh_name);
@@ -49,6 +51,16 @@ int main(void)
 
     Char_ptr *args = split(command, " ");
 
+    if (is_command_alias(args, alias_list))
+    {
+      args = perform_alias(args, alias_list);
+    }
+
+    if (is_perform_variable(args))
+    {
+      perform_variable(args, variable_list);
+    }
+
     if (!strcmp(args[0], "run"))
     {
       char file_content[1000];
@@ -62,6 +74,7 @@ int main(void)
     {
       continue;
     }
+
     execute_exec_commands(args, &process_flag);
     printf("\n");
   }
