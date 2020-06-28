@@ -60,20 +60,16 @@ void handle_redirection(Char_ptr *args, Char_ptr type, int* process_flag)
   Args_info_ptr separeted_args = parse_args(args, type);
   int file_index = separeted_args->index_of_file;
   int in, out, savestdin_stream, savestdout_stream;
-  in = open("input", O_RDONLY);
   if (!strcmp(">", type))
   {
     out = open(separeted_args->parsed_args[file_index], O_RDWR | O_CREAT | O_TRUNC, 0666);
   }
   else
   {
-    out = open(separeted_args->parsed_args[file_index], O_RDWR | O_CREAT | O_APPEND, 0666);
+    out = open(separeted_args->parsed_args[file_index], O_RDWR | O_APPEND);
   }
-  savestdin_stream = dup(0);
   savestdout_stream = dup(1);
-  dup2(in, 0);
   dup2(out, 1);
-  close(in);
   close(out);
   int pid = fork();
   if (pid == 0)
@@ -87,7 +83,6 @@ void handle_redirection(Char_ptr *args, Char_ptr type, int* process_flag)
   else
   {
     wait(&pid);
-    dup2(savestdin_stream, 0);
     dup2(savestdout_stream, 1);
   }
 }

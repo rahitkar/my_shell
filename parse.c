@@ -8,7 +8,7 @@ int get_args_length(Char_ptr* args)
   size_t indx = 0;
   while (args[indx] != NULL)
   {
-    indx++;
+    indx++; 
   }
   return indx;
 }
