@@ -9,4 +9,6 @@ int is_perform_variable(Char_ptr* args);
 
 void perform_variable(Char_ptr* args, List_ptr variable_list);
 
+int perform_unset_variable(Char_ptr* args, List_ptr variable_list);
+
 #endif

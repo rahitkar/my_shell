@@ -56,6 +56,12 @@ int handle_builtin(Char_ptr *args, Char_ptr command, List_ptr alias_list, List_p
     return 1;
   }
 
+  if (!strcmp(args[0], "unset"))
+  {
+    *process_flag = perform_unset_variable(args, variable_list);
+    return 1;
+  }
+  
   redirected_flag = is_redirected(args); //redirection check
   if (redirected_flag)
   {

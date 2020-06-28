@@ -78,3 +78,15 @@ void perform_variable(Char_ptr* args, List_ptr variable_list)
 
   args[variable_command_indx] = variable_command;
 }
+
+int perform_unset_variable(Char_ptr* args, List_ptr variable_list)
+{
+  if (get_args_length(args) <= 1)
+  {
+    fprintf(stderr, "rsh: Not enough arguments\n");
+    return -1;
+  }
+
+  int element_index = search(variable_list, args[1]);
+  return !remove_at(variable_list, element_index);
+}
