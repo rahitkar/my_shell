@@ -15,6 +15,7 @@
 #include "script.h"
 #include "alias.h"
 #include "set_variable.h"
+#include "asterisk.h"
 
 typedef char *Char_ptr;
 
@@ -51,6 +52,15 @@ int main(void)
 
     Char_ptr *args = split(command, " ");
 
+    if (is_asterisk(command))
+    {
+      args = handle_asterisk(args);
+      if (!strcmp(args[0], "ls"))
+      {
+        continue;
+      }
+    }
+
     if (is_command_alias(args, alias_list))
     {
       args = perform_alias(args, alias_list);
@@ -76,6 +86,5 @@ int main(void)
     }
 
     execute_exec_commands(args, &process_flag);
-    printf("\n");
   }
 }

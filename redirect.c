@@ -68,6 +68,7 @@ void handle_redirection(Char_ptr *args, Char_ptr type, int* process_flag)
   {
     out = open(separeted_args->parsed_args[file_index], O_RDWR | O_APPEND);
   }
+
   savestdout_stream = dup(1);
   dup2(out, 1);
   close(out);
@@ -84,6 +85,5 @@ void handle_redirection(Char_ptr *args, Char_ptr type, int* process_flag)
     wait(&pid);
     dup2(savestdout_stream, 1);
     *process_flag = WEXITSTATUS(pid);
-    fprintf(stderr, "%d\n", *process_flag);
   }
 }
