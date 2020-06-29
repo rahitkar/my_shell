@@ -1,13 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>   //getenv
-#include <unistd.h>   //fork exac read
-#include <sys/wait.h> //wait
-#include <string.h>   //string
-#include <signal.h>   //signal
-#include <fcntl.h>    //open
-
-#include "config.h"
 #include "parse.h"
+#include "config.h"
 #include "print_prompt.h"
 #include "builtin.h"
 #include "linked_list.h"
@@ -16,8 +8,6 @@
 #include "alias.h"
 #include "set_variable.h"
 #include "asterisk.h"
-
-typedef char *Char_ptr;
 
 int main(void)
 {
@@ -32,22 +22,20 @@ int main(void)
   int rshrc_fd = open(rsh_path, O_RDWR);
   char rsh_conttents[1000];
   read(rshrc_fd, rsh_conttents, 1000);
-
+  close(rshrc_fd);
   run_script(rsh_conttents, alias_list, variable_list, &process_flag);
-
-  Char_ptr prompt_ditels = strcmp(prompt, "") == 0 ? "my_shell" : prompt; // check for configuration
 
   char command[300];
   char current_directory[100];
   int redirected_flag;
-  while (1) // infinity loop to continue the shell
+  while (1)
   {
-    signal(SIGINT, SIG_IGN); // quit ignored
+    signal(SIGINT, SIG_IGN);
 
-    print_prompt(prompt_ditels, current_directory, process_flag, prmt_colour_flag, pwd_colour_flag); // print prompt as par the last status code
+    print_prompt(prompt, current_directory, process_flag, prmt_colour_flag, pwd_colour_flag);
     gets(command);
 
-    if (!strcmp(command, "exit")) // exit gracefully
+    if (!strcmp(command, "exit"))
       return 0;
 
     Char_ptr *args = split(command, " ");
@@ -73,9 +61,10 @@ int main(void)
 
     if (!strcmp(args[0], "run"))
     {
-      char file_content[1000];
       int file_fd = open(args[1], O_RDWR);
+      char file_content[1000];
       read(file_fd, file_content, 1000);
+      close(file_fd);
       run_script(file_content, alias_list, variable_list, &process_flag);
       continue;
     }

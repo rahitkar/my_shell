@@ -1,20 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h> //open
-#include <unistd.h> //fork dup, exac
-#include <sys/wait.h> //wait
-#include <string.h>
-
 #include "redirect.h"
-#include "parse.h"
-
-typedef struct
-{
-  Char_ptr *parsed_args;
-  int index_of_file;
-} Args_info;
-
-typedef Args_info *Args_info_ptr;
 
 int is_redirected(Char_ptr *args)
 {
@@ -68,7 +52,6 @@ void handle_redirection(Char_ptr *args, Char_ptr type, int* process_flag)
   {
     out = open(separeted_args->parsed_args[file_index], O_RDWR | O_APPEND);
   }
-
   savestdout_stream = dup(1);
   dup2(out, 1);
   close(out);

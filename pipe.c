@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h> //wait
-#include <stdlib.h>   //exit
-
 #include "pipe.h"
-#include "parse.h"
 
 int is_piped(Char_ptr command)
 {
@@ -19,21 +12,11 @@ int is_piped(Char_ptr command)
     return 0;
 }
 
-int get_command_length(Char_ptr *args)
-{
-    size_t indx = 0;
-    while (args[indx] != NULL)
-    {
-        indx++;
-    }
-    return indx;
-}
-
 Commands_info *get_piped_commands(Char_ptr command)
 {
     Commands_info *commands = malloc(sizeof(Commands_info));
     Char_ptr *all_commands = split(command, "|");
-    commands->commands = malloc(sizeof(Char_ptr *) * get_command_length(all_commands));
+    commands->commands = malloc(sizeof(Char_ptr *) * get_args_length(all_commands));
     int length = 0;
 
     for (int i = 0; all_commands[i] != NULL; i++)
@@ -45,13 +28,12 @@ Commands_info *get_piped_commands(Char_ptr command)
     return commands;
 }
 
-void perform_pipe(Char_ptr **commands, int count, int* process_flag)
+void perform_pipe(Char_ptr **commands, int count, int *process_flag)
 {
     if (count == 0)
     {
         return;
     }
-    
     int pipe_fd[2], pid_2;
     pipe(pipe_fd);
     pid_2 = fork();
@@ -59,9 +41,9 @@ void perform_pipe(Char_ptr **commands, int count, int* process_flag)
     {
         close(pipe_fd[0]);
         dup2(pipe_fd[1], 1);
-        perform_pipe(commands, count -1, process_flag);
-        execvp(commands[count -1][0], commands[count -1]);
-        fprintf(stderr, "rsh: %s command not found\n", commands[count -1][0]);
+        perform_pipe(commands, count - 1, process_flag);
+        execvp(commands[count - 1][0], commands[count - 1]);
+        fprintf(stderr, "rsh: %s command not found\n", commands[count - 1][0]);
         exit(-1);
     }
     else
@@ -75,16 +57,16 @@ void perform_pipe(Char_ptr **commands, int count, int* process_flag)
     }
 }
 
-void handle_pipes(Char_ptr command,  int* process_flag)
+void handle_pipes(Char_ptr command, int *process_flag)
 {
     int pid;
 
     Commands_info *commands = get_piped_commands(command);
-    
+
     pid = fork();
     if (pid == 0)
     {
-        perform_pipe(commands->commands, commands->length -1, process_flag);
+        perform_pipe(commands->commands, commands->length - 1, process_flag);
     }
     else
     {

@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <unistd.h>
-
 #include "print_prompt.h"
 
 typedef void (*Paint)();
@@ -30,13 +27,11 @@ void reset()
   printf("\033[0m");
 }
 
-void print_prompt(char *shell_ditels, char *current_directory, int flag, int prmt_cf, int pwd_cf) // two struct 
+void print_prompt(char *shell_ditels, char *current_directory, int flag, int prmt_cf, int pwd_cf)
 {
   Paint colours[] = {red, yellow, blue, green, reset};
-  // yellow();
   colours[prmt_cf]();
   printf("%s", shell_ditels);
-  // blue();
   colours[pwd_cf]();
   printf("%s", getcwd(current_directory, 100));
   green();

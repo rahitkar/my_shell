@@ -1,7 +1,7 @@
 #ifndef __PIPE_H_
 #define __PIPE_H_
 
-typedef char *Char_ptr;
+#include "parse.h"
 
 typedef struct
 {

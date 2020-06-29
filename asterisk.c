@@ -1,13 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>   //fork exac read
-#include <sys/wait.h> //wait
-#include <fcntl.h>    //open
-#include <string.h>
-
 #include "asterisk.h"
-#include "redirect.h"
-#include "parse.h"
 
 int is_asterisk(Char_ptr commands)
 {
@@ -21,20 +12,13 @@ int is_asterisk(Char_ptr commands)
     i++;
   }
   return 0;
-}
+} // might be a repetition
 
 Char_ptr create_command(Char_ptr *args, Char_ptr input)
 {
   Char_ptr new_commands = join(args[0], "\n");
   new_commands = join(new_commands, input);
-  int i = 2;
-  while (args[i] != NULL)
-  {
-    new_commands = join(new_commands, args[i]);
-    new_commands = join(new_commands, "\n");
-    i++;
-  }
-  new_commands[strlen(new_commands) -1] = '\0';
+  new_commands = make_new_command(new_commands, args, 2, "\n");
   return new_commands;
 }
 

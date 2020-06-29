@@ -1,7 +1,15 @@
 #ifndef __REDIRECT_H_
 #define __REDIRECT_H_
 
-typedef char *Char_ptr;
+#include "parse.h"
+
+typedef struct
+{
+  Char_ptr *parsed_args;
+  int index_of_file;
+} Args_info;
+
+typedef Args_info *Args_info_ptr;
 
 int is_redirected(Char_ptr *args);
 
