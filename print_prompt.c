@@ -44,6 +44,6 @@ void print_prompt(char *shell_ditels, char *current_directory, int flag, int prm
   {
     red();
   }
-  printf("-> ");
+  printf(" ❯ ");
   reset();
 }

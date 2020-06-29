@@ -1,4 +1,5 @@
+#! /bin/bash
 gcc -c ~/shell/*.c
-gcc -o ~/bin/$1 *.o
+gcc -o ~/bin/shell *.o
 rm *.o
-~/bin/$1
+~/bin/shell

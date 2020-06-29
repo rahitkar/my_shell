@@ -59,7 +59,7 @@ void handle_redirection(Char_ptr *args, Char_ptr type, int* process_flag)
 {
   Args_info_ptr separeted_args = parse_args(args, type);
   int file_index = separeted_args->index_of_file;
-  int in, out, savestdin_stream, savestdout_stream;
+  int out, savestdin_stream, savestdout_stream;
   if (!strcmp(">", type))
   {
     out = open(separeted_args->parsed_args[file_index], O_RDWR | O_CREAT | O_TRUNC, 0666);
@@ -77,12 +77,13 @@ void handle_redirection(Char_ptr *args, Char_ptr type, int* process_flag)
     execvp(separeted_args->parsed_args[0], separeted_args->parsed_args);
     *process_flag = -1;
     fprintf(stderr, "rsh: %s command not found\n", separeted_args->parsed_args[0]);
-    execlp("rm",  "rm", separeted_args->parsed_args[file_index], NULL);
     exit(-1);
   }
   else
   {
     wait(&pid);
     dup2(savestdout_stream, 1);
+    *process_flag = WEXITSTATUS(pid);
+    fprintf(stderr, "%d\n", *process_flag);
   }
 }

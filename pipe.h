@@ -11,6 +11,6 @@ typedef struct
 
 int is_piped(Char_ptr command);
 
-void handle_pipes(Char_ptr command);
+void handle_pipes(Char_ptr command,  int* process_flag);
 
 #endif

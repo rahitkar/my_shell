@@ -45,7 +45,7 @@ Commands_info *get_piped_commands(Char_ptr command)
     return commands;
 }
 
-void perform_pipe(Char_ptr **commands, int count)
+void perform_pipe(Char_ptr **commands, int count, int* process_flag)
 {
     if (count == 0)
     {
@@ -59,7 +59,7 @@ void perform_pipe(Char_ptr **commands, int count)
     {
         close(pipe_fd[0]);
         dup2(pipe_fd[1], 1);
-        perform_pipe(commands, count -1);
+        perform_pipe(commands, count -1, process_flag);
         execvp(commands[count -1][0], commands[count -1]);
         fprintf(stderr, "rsh: %s command not found\n", commands[count -1][0]);
         exit(-1);
@@ -75,9 +75,8 @@ void perform_pipe(Char_ptr **commands, int count)
     }
 }
 
-void handle_pipes(Char_ptr command)
+void handle_pipes(Char_ptr command,  int* process_flag)
 {
-    signal(SIGINT, NULL); // quit ignored
     int pid;
 
     Commands_info *commands = get_piped_commands(command);
@@ -85,10 +84,11 @@ void handle_pipes(Char_ptr command)
     pid = fork();
     if (pid == 0)
     {
-        perform_pipe(commands->commands, commands->length -1);
+        perform_pipe(commands->commands, commands->length -1, process_flag);
     }
     else
     {
         wait(&pid);
+        *process_flag = WEXITSTATUS(pid);
     }
 }

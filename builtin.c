@@ -76,7 +76,7 @@ int handle_builtin(Char_ptr *args, Char_ptr command, List_ptr alias_list, List_p
 
   if (is_piped(command))
   {
-    handle_pipes(command);
+    handle_pipes(command, process_flag);
     return 1;
   }
   return 0;
